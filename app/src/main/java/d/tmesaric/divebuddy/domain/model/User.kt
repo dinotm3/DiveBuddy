@@ -6,18 +6,12 @@ data class User(
     val id: String,
     val name: String,
     val email: String,
+    val country: Country
     //val lastKnownPosition: LatLng,
-    // Other user-related properties...
 ) {
-//    fun calculateDistanceToUser(user: User): Float {
-//        val results = FloatArray(1)
-//        Location.distanceBetween(
-//            lastKnownPosition.latitude,
-//            lastKnownPosition.longitude,
-//            user.lastKnownPosition.latitude,
-//            user.lastKnownPosition.longitude,
-//            results
-//        )
-//        return results[0]
-//    }
+
+    fun getLocation(){
+        // This will calculate position which will be used to calculate distance between users
+        // TODO
+    }
 }
