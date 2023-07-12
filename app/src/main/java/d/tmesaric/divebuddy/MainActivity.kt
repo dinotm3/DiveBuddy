@@ -72,8 +72,8 @@ class MainActivity : ComponentActivity() {
                                 val lat = location.latitude
                                 val long = location.longitude
 
-/*                                val lat = 45.838330
-                                val long = 15.974782*/
+                                location.latitude = 43.38090
+                                location.longitude = 16.56144
                                 var data = getMockData();
                                 var userName = ""
                                 var distance: Float  = 0F
@@ -113,8 +113,8 @@ class MainActivity : ComponentActivity() {
         var location5: Location?
 
 
-        location1.latitude = 45.77391
-        location1.longitude = 15.99188
+        location1.latitude = 43.38442
+        location1.longitude = 16.55815
 
         val user1 =
             User("1", "User1", "user1@gmail.com", Country.Croatia, location1)
