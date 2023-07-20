@@ -2,8 +2,6 @@ package d.tmesaric.divebuddy
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Location
-import android.location.LocationRequest
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,24 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
-import d.tmesaric.divebuddy.domain.model.Country
-import d.tmesaric.divebuddy.domain.model.User
+import d.tmesaric.divebuddy.domain.location.LocationClientImpl
 import d.tmesaric.divebuddy.presentation.finder.FinderScreen
 import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
 import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
 
 class MainActivity : ComponentActivity() {
-    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
@@ -52,7 +44,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val userLoggedIn = true
                     val navController = rememberNavController()
-                    val startDestination = redirect(userLoggedIn)
+                    val fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+                    val locationClient = LocationClientImpl(this, fusedLocationProviderClient)
+                    val startDestination = redirect(userLoggedIn, locationClient)
 
                     NavHost(navController = navController, startDestination = startDestination) {
                         composable("profile") { ProfileScreen(navController) }
@@ -64,15 +59,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun redirect(userLoggedIn: Boolean): String {
+    private fun redirect(userLoggedIn: Boolean, client: LocationClientImpl): String {
         var startDestination = "sign_in"
         if (userLoggedIn) {
             startDestination = "profile"
-
+            val lastKwnLtd = client.getLocation().latitude
+            val lastKwnLng = client.getLocation().longitude
+            Toast.makeText(this, "User long $lastKwnLng, User lat $lastKwnLtd", Toast.LENGTH_LONG).show()
+            // user.lastKnwnLocation = client.getLocation()
         }
         return startDestination;
     }
-
 }
 
 
