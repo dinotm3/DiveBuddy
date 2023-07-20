@@ -33,7 +33,7 @@ fun FinderScreen(
     val maxRange = 0f..1000f;
     var sliderPosition by remember { mutableStateOf(0f) }
     val context = LocalContext.current
-
+    var chosenRange = sliderPosition;
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,18 +46,17 @@ fun FinderScreen(
             Slider(
                 value = sliderPosition,
                 onValueChange = { sliderPosition = it },
-                valueRange = maxRange
+                valueRange = maxRange,
+                onValueChangeFinished = { chosenRange = sliderPosition }
             )
         }
 
         Row(
         ) {
             Button(
-                onClick = { findUsersInRange(context) },
+                onClick = { search(context, chosenRange) },
                 modifier = Modifier
                     .fillMaxWidth(0.25f),
-
-
                 ) {
                 Text(text = "Search")
             }
@@ -65,7 +64,7 @@ fun FinderScreen(
     }
 }
 
-fun findUsersInRange(context: Context) {
+fun search(context: Context, chosenRange: Float) {
     val fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     if (ActivityCompat.checkSelfPermission(
             context,
@@ -96,23 +95,27 @@ fun findUsersInRange(context: Context) {
             Toast.makeText(context, "cannot get location", Toast.LENGTH_SHORT)
                 .show()
         else {
-            val lat = location.latitude
-            val long = location.longitude
 
             location.latitude = 43.38090
             location.longitude = 16.56144
-            var data = getMockData();
-            var userName = ""
-            var distance: Float  = 0F
-            for (user: User in data) {
-                val userLocation: Location = user.lastKnownPosition
-                userName = user.name;
-                distance = location.distanceTo(userLocation)
-            }
-            Toast.makeText(context, "Lat: $lat, Long: $long - Distance to $userName is $distance m", Toast.LENGTH_LONG)
-                .show()
+            val data = getMockData();
+            findUsersInRangeFromData(data, location, context, chosenRange)
         }
     }
+}
+
+fun findUsersInRangeFromData(data: List<User>, location: Location, context: Context, chosenRange: Float) {
+    val lat = location.latitude
+    val long = location.longitude
+    var userName = ""
+    var distance: Float  = 0F
+    for (user: User in data) {
+        val userLocation: Location = user.lastKnownPosition
+        userName = user.name;
+        distance = location.distanceTo(userLocation)
+    }
+    Toast.makeText(context, "Chosen range: $chosenRange, Lat: $lat, Long: $long - Distance to $userName is $distance m", Toast.LENGTH_LONG)
+        .show()
 }
 
 fun getMockData(): List<User> {
