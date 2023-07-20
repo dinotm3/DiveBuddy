@@ -1,9 +1,7 @@
 package d.tmesaric.divebuddy
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,8 +47,8 @@ class MainActivity : ComponentActivity() {
                     val fusedLocationProviderClient: FusedLocationProviderClient =
                         LocationServices.getFusedLocationProviderClient(this)
                     val locationClient = LocationClientImpl(this, fusedLocationProviderClient)
-                    val startDestination = redirect(user, userLoggedIn, locationClient)
-
+                    saveLocation(user, locationClient)
+                    val startDestination = redirect(userLoggedIn)
                     NavHost(navController = navController, startDestination = startDestination) {
                         composable("profile") { ProfileScreen(navController) }
                         composable("sign_in") { SignInScreen(navController) }
@@ -61,17 +59,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun redirect(user: User, userLoggedIn: Boolean, client: LocationClientImpl): String {
+    private fun saveLocation(user: User, client: LocationClientImpl) {
+        user.lastKnownPosition = client.getLocation()
+    }
+
+    private fun redirect(userLoggedIn: Boolean, ): String {
         var startDestination = "sign_in"
         if (userLoggedIn) {
             startDestination = "profile"
-            val lastKwnLtd = client.getLocation().latitude
-            val lastKwnLng = client.getLocation().longitude
-/*            Toast.makeText(this, "User long $lastKwnLng, User lat $lastKwnLtd", Toast.LENGTH_LONG)
-                .show()*/
-            user.lastKnownPosition = client.getLocation()
-            Toast.makeText(this, "User last know position: ${user.lastKnownPosition}", Toast.LENGTH_LONG)
-                .show()
         }
         return startDestination;
     }
