@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import d.tmesaric.divebuddy.domain.model.Country
 import d.tmesaric.divebuddy.domain.model.User
+import d.tmesaric.divebuddy.presentation.finder.FinderScreen
 import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
 import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
@@ -99,6 +100,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = startDestination) {
                         composable("profile") { ProfileScreen(navController) }
                         composable("sign_in") { SignInScreen(navController) }
+                        composable("finder") { FinderScreen(navController) }
                     }
                 }
             }

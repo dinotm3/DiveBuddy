@@ -37,8 +37,8 @@ fun ProfileScreen(navController: NavController) {
             Text("sign_in_screen")
         }
 
-        Button(onClick = {  }) {
-            Text("sign_in_screen")
+        Button(onClick = { navController.navigate("finder") }) {
+            Text("finder")
         }
     }
 }
