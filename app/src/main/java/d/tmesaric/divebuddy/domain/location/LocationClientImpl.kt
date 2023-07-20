@@ -47,8 +47,8 @@ class LocationClientImpl(
             else {
                 userLocation.latitude = location.latitude
                 userLocation.longitude = location.longitude
-                Toast.makeText(context, "User lng is ${location.longitude}, ltd is ${location.latitude}", Toast.LENGTH_LONG)
-                    .show()
+/*                Toast.makeText(context, "User lng is ${location.longitude}, ltd is ${location.latitude}", Toast.LENGTH_LONG)
+                    .show()*/
             }
         }
         return userLocation;

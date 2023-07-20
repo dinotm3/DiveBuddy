@@ -95,9 +95,9 @@ fun search(context: Context, chosenRange: Float) {
             Toast.makeText(context, "cannot get location", Toast.LENGTH_SHORT)
                 .show()
         else {
-
-            location.latitude = 43.38090
-            location.longitude = 16.56144
+            // just for testing distance - next 2 lines
+/*            location.latitude = 43.38090
+            location.longitude = 16.56144*/
             val data = getMockData();
             findUsersInRangeFromData(data, location, context, chosenRange)
         }
@@ -105,17 +105,14 @@ fun search(context: Context, chosenRange: Float) {
 }
 
 fun findUsersInRangeFromData(data: List<User>, location: Location, context: Context, chosenRange: Float) {
-    val lat = location.latitude
-    val long = location.longitude
     var userName = ""
     var distance: Float  = 0F
     for (user: User in data) {
-        val userLocation: Location = user.lastKnownPosition
         userName = user.name;
-        distance = location.distanceTo(userLocation)
+        distance = location.distanceTo(user.lastKnownPosition!!)
+        Toast.makeText(context, "Lat: ${location.latitude} Long: ${location.longitude} - Distance to $userName is $distance m", Toast.LENGTH_LONG)
+            .show()
     }
-    Toast.makeText(context, "Chosen range: $chosenRange, Lat: $lat, Long: $long - Distance to $userName is $distance m", Toast.LENGTH_LONG)
-        .show()
 }
 
 fun getMockData(): List<User> {

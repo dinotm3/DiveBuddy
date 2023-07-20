@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.domain.location.LocationClientImpl
+import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.presentation.finder.FinderScreen
 import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
@@ -43,11 +44,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val userLoggedIn = true
+                    val user = User()
                     val navController = rememberNavController()
-                    val fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
+                    val fusedLocationProviderClient: FusedLocationProviderClient =
+                        LocationServices.getFusedLocationProviderClient(this)
                     val locationClient = LocationClientImpl(this, fusedLocationProviderClient)
-                    val startDestination = redirect(userLoggedIn, locationClient)
+                    val startDestination = redirect(user, userLoggedIn, locationClient)
 
                     NavHost(navController = navController, startDestination = startDestination) {
                         composable("profile") { ProfileScreen(navController) }
@@ -59,14 +61,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun redirect(userLoggedIn: Boolean, client: LocationClientImpl): String {
+    private fun redirect(user: User, userLoggedIn: Boolean, client: LocationClientImpl): String {
         var startDestination = "sign_in"
         if (userLoggedIn) {
             startDestination = "profile"
             val lastKwnLtd = client.getLocation().latitude
             val lastKwnLng = client.getLocation().longitude
-            Toast.makeText(this, "User long $lastKwnLng, User lat $lastKwnLtd", Toast.LENGTH_LONG).show()
-            // user.lastKnwnLocation = client.getLocation()
+/*            Toast.makeText(this, "User long $lastKwnLng, User lat $lastKwnLtd", Toast.LENGTH_LONG)
+                .show()*/
+            user.lastKnownPosition = client.getLocation()
+            Toast.makeText(this, "User last know position: ${user.lastKnownPosition}", Toast.LENGTH_LONG)
+                .show()
         }
         return startDestination;
     }
