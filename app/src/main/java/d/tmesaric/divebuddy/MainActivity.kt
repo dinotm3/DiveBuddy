@@ -22,6 +22,7 @@ import d.tmesaric.divebuddy.presentation.finder.FinderScreen
 import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
 import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
+import d.tmesaric.divebuddy.utils.redirect
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     val fusedLocationProviderClient: FusedLocationProviderClient =
                         LocationServices.getFusedLocationProviderClient(this)
                     val locationClient = LocationClientImpl(this, fusedLocationProviderClient)
-                    saveLocation(user, locationClient)
+                    locationClient.saveLocation(user)
                     val startDestination = redirect(userLoggedIn)
                     NavHost(navController = navController, startDestination = startDestination) {
                         composable("profile") { ProfileScreen(navController) }
@@ -57,26 +58,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private fun saveLocation(user: User, client: LocationClientImpl) {
-        user.lastKnownPosition = client.getLocation()
-    }
-
-    private fun redirect(userLoggedIn: Boolean, ): String {
-        var startDestination = "sign_in"
-        if (userLoggedIn) {
-            startDestination = "profile"
-        }
-        return startDestination;
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DiveBuddyTheme {
-
     }
 }

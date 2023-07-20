@@ -10,6 +10,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import d.tmesaric.divebuddy.domain.model.User
 
 class LocationClientImpl(
     private val context: Context,
@@ -52,6 +53,10 @@ class LocationClientImpl(
             }
         }
         return userLocation;
+    }
+
+    override fun saveLocation(user: User) {
+        user.lastKnownPosition = getLocation()
     }
 }
 

@@ -108,7 +108,7 @@ fun findUsersInRangeFromData(data: List<User>, location: Location, context: Cont
     var userName = ""
     var distance: Float  = 0F
     for (user: User in data) {
-        userName = user.name;
+        userName = user.name
         distance = location.distanceTo(user.lastKnownPosition!!)
         Toast.makeText(context, "loc: ${location.latitude}, ${location.longitude}, Distance: is $distance m", Toast.LENGTH_LONG)
             .show()
