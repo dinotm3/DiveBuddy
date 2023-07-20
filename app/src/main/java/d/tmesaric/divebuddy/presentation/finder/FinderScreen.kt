@@ -110,7 +110,7 @@ fun findUsersInRangeFromData(data: List<User>, location: Location, context: Cont
     for (user: User in data) {
         userName = user.name;
         distance = location.distanceTo(user.lastKnownPosition!!)
-        Toast.makeText(context, "Lat: ${location.latitude} Long: ${location.longitude} - Distance to $userName is $distance m", Toast.LENGTH_LONG)
+        Toast.makeText(context, "loc: ${location.latitude}, ${location.longitude}, Distance: is $distance m", Toast.LENGTH_LONG)
             .show()
     }
 }
@@ -122,10 +122,12 @@ fun getMockData(): List<User> {
     var location4: Location?
     var location5: Location?
 
+    //43.38475274396842, 16.557534291996078
+/*    location1.latitude = 43.38442
+    location1.longitude = 16.55815*/
 
-    location1.latitude = 43.38442
-    location1.longitude = 16.55815
-
+    location1.latitude = 43.38475274396842
+    location1.longitude = 16.557534291996078
     val user1 =
         User("1", "User1", "user1@gmail.com", Country.Croatia, location1)
 /*    val user2 = User("2", "User2", "user2@gmail.com", Country.Croatia)
