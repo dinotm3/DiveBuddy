@@ -10,3 +10,10 @@ data class User(
     val country: Country = Country.Croatia,
     var lastKnownPosition: Location = Location("Test")
 )
+
+fun getLastKnownPosition(lat: Double, lng: Double): Location {
+    val lastKnownPosition = Location("Location")
+    lastKnownPosition.latitude = lat
+    lastKnownPosition.longitude = lng
+    return lastKnownPosition;
+}
