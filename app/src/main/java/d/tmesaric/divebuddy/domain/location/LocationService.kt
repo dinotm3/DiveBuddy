@@ -14,7 +14,6 @@ class LocationService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
 
-
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
@@ -27,15 +26,10 @@ class LocationService : Service() {
         )
     }
 
-
     private fun locate() {
-
         locationClient
             .getLocation()
-
     }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
