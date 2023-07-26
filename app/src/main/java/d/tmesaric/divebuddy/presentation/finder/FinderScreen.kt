@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationRequest
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -14,16 +15,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import d.tmesaric.divebuddy.domain.model.Country
-
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.unit.dp
 import d.tmesaric.divebuddy.domain.model.User
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FinderScreen(
     navController: NavController,
@@ -33,39 +38,60 @@ fun FinderScreen(
     val context = LocalContext.current
     var chosenRange = sliderPosition;
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Row() {
-            Text(text = "$sliderPosition km")
+    val viewModel: FinderViewModel = hiltViewModel()
+    val state = viewModel.state.value
+    val isLoading = viewModel.state.value.isLoading
 
-        }
-
-        Row() {
-            Slider(
-                value = sliderPosition,
-                onValueChange = { sliderPosition = it },
-                valueRange = maxRange,
-                onValueChangeFinished = { chosenRange = sliderPosition }
-            )
-        }
-
-        Row(
+    Column() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.15F)
         ) {
-            Button(
-                onClick = { search(context, chosenRange) },
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
+            Row() {
+                Text(text = "$sliderPosition km")
+
+            }
+
+            Row() {
+                Slider(
+                    value = sliderPosition,
+                    onValueChange = { sliderPosition = it },
+                    valueRange = maxRange,
+                    onValueChangeFinished = { chosenRange = sliderPosition }
+                )
+            }
+
+            Row(
+            ) {
+                Button(
+                    onClick = { search(context, chosenRange) },
+                    modifier = Modifier
+                        .fillMaxWidth(0.25f),
                 ) {
-                Text(text = "Search")
+                    Text(text = "Search")
+                }
+            }
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+
+        ) {
+            if (state.users != null) {
+                items(state.users) { user ->
+                    FinderListItem(user = user, onItemClick = {/**/})
+                }
             }
         }
     }
+
 }
 
 fun search(context: Context, chosenRange: Float) {
-    val fusedLocationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
     if (ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -104,13 +130,22 @@ fun search(context: Context, chosenRange: Float) {
     }
 }
 
-fun findUsersInRangeFromData(data: List<User>, location: Location, context: Context, chosenRange: Float) {
+fun findUsersInRangeFromData(
+    data: List<User>,
+    location: Location,
+    context: Context,
+    chosenRange: Float
+) {
     var userName = ""
-    var distance: Float  = 0F
+    var distance: Float = 0F
     for (user: User in data) {
         userName = user.name
         distance = location.distanceTo(user.lastKnownPosition!!)
-        Toast.makeText(context, "loc: ${location.latitude}, ${location.longitude}, Distance: is $distance m", Toast.LENGTH_LONG)
+        Toast.makeText(
+            context,
+            "loc: ${location.latitude}, ${location.longitude}, Distance: is $distance m",
+            Toast.LENGTH_LONG
+        )
             .show()
     }
 }

@@ -23,7 +23,9 @@ import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
 import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
 import d.tmesaric.divebuddy.utils.redirect
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
