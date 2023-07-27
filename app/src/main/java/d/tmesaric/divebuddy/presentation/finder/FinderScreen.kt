@@ -8,12 +8,17 @@ import android.location.LocationRequest
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -23,10 +28,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
-import d.tmesaric.divebuddy.domain.model.Country
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.domain.model.getLastKnownLocation
 
@@ -35,40 +36,76 @@ import d.tmesaric.divebuddy.domain.model.getLastKnownLocation
 fun FinderScreen(
     navController: NavController,
 ) {
-    val maxRange = 1f..1000f;
+    val maxRange = 1f..1000f
     var sliderPosition by remember { mutableStateOf(0f) }
     val context = LocalContext.current
-    var chosenRange = sliderPosition;
 
     val viewModel: FinderViewModel = hiltViewModel()
-    var state = viewModel.state.value
-    val allUsers = state.users;
-    val isLoading = viewModel.state.value.isLoading
+    val state = viewModel.state.value
+    val isLoading = state.isLoading
 
-    Column() {
+    Column {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.15F)
         ) {
-            Row() {
+            Row {
                 Text(text = "$sliderPosition km")
-
             }
 
-            Row() {
+            Row {
                 Slider(
                     value = sliderPosition,
                     onValueChange = { sliderPosition = it },
                     valueRange = maxRange,
-                    onValueChangeFinished = { chosenRange = sliderPosition },
+                    onValueChangeFinished = {
+                        val fusedLocationProviderClient: FusedLocationProviderClient =
+                            LocationServices.getFusedLocationProviderClient(context)
+                        if (ActivityCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            fusedLocationProviderClient.getCurrentLocation(
+                                LocationRequest.QUALITY_HIGH_ACCURACY,
+                                object : CancellationToken() {
+                                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                                        CancellationTokenSource().token
+
+                                    override fun isCancellationRequested() = false
+                                }
+                            ).addOnSuccessListener { location: Location? ->
+                                if (location == null)
+                                    Toast.makeText(
+                                        context,
+                                        "Cannot get location",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                else {
+                                    location.latitude = 43.38090
+                                    location.longitude = 16.56144
+                                    viewModel.filterUsersInRange(
+                                        sliderPosition,
+                                        location,
+                                        context
+                                    )
+                                }
+                            }
+                        } else {
+                            // Handle the case when location permissions are not granted
+                        }
+                    },
                 )
             }
 
-            Row(
-            ) {
+            Row {
                 Button(
-                    onClick = { search(context, chosenRange, viewModel, allUsers) },
+                    onClick = { /* Do nothing here, the filtering is handled by the ViewModel */ },
                     modifier = Modifier
                         .fillMaxWidth(0.25f),
                 ) {
@@ -76,20 +113,26 @@ fun FinderScreen(
                 }
             }
         }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(4.dp)
-
         ) {
-            if (state.users != null) {
-                items(state.users!!) { user ->
+            // Use filteredUsers state instead of state.users
+            if (viewModel.filteredUsers.value != null) {
+                items(viewModel.filteredUsers.value!!) { user ->
                     FinderListItem(user = user, onItemClick = {/**/})
                 }
             }
         }
+
+        if (isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(CenterHorizontally))
+        }
     }
 }
+
 
 fun search(context: Context, chosenRange: Float, viewModel: FinderViewModel, allUsers: List<User>?) {
     val fusedLocationProviderClient: FusedLocationProviderClient =
@@ -129,21 +172,20 @@ fun search(context: Context, chosenRange: Float, viewModel: FinderViewModel, all
             location.longitude = 16.56144
             //val data = getMockData();
             usersInRange = findUsersInRange(allUsers, location, context, chosenRange)
-            viewModel.setUsers(usersInRange)
         }
     }
 }
 
 fun findUsersInRange(
-    data: List<User>?,
+    allUsers: List<User>?,
     location: Location,
     context: Context,
     chosenRange: Float
 ): List<User>? {
     var distance: Float = 0F
     var usersInRange: MutableList<User>? = mutableListOf()
-    if (data != null) {
-        for (user: User in data) {
+    if (allUsers != null) {
+        for (user: User in allUsers) {
             distance = location.distanceTo(getLastKnownLocation(user.lat, user.lng))
             if (toKm(distance) <= chosenRange) {
                 usersInRange!!.add(user)
