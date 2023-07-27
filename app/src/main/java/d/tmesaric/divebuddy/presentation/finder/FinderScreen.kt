@@ -164,7 +164,7 @@ fun getMockData(): List<User> {
     location1.latitude = 43.38475274396842
     location1.longitude = 16.557534291996078
     val user1 =
-        User("1", "User1", "user1@gmail.com", Country.Croatia, location1)
+        User("1", "User1", "user1@gmail.com", "Croatia", location1)
 /*    val user2 = User("2", "User2", "user2@gmail.com", Country.Croatia)
     val user3 = User("3", "User3", "user3@gmail.com", Country.Croatia)
     val user4 = User("4", "User4", "user4@gmail.com", Country.Croatia)

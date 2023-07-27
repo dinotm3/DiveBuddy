@@ -7,7 +7,7 @@ data class User(
     val id: String = "Test",
     val name: String = "Test",
     val email: String = "Test",
-    val country: Country = Country.Croatia,
+    val country: String = "Test",
     var lastKnownPosition: Location = Location("Test")
 )
 

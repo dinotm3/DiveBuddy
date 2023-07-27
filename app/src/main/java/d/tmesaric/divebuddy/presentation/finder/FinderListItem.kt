@@ -52,7 +52,7 @@ fun FinderListItem(
                 modifier = Modifier.size(IMAGE_MODIFIER)
             )*/
             Text(
-                text = "${user.name}. \n\nDate: ${user.country}",
+                text = "${user.name}. \nCountry: ${user.country}\n",
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
