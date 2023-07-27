@@ -26,20 +26,23 @@ import com.google.android.gms.tasks.OnTokenCanceledListener
 import d.tmesaric.divebuddy.domain.model.Country
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import d.tmesaric.divebuddy.domain.model.User
+import d.tmesaric.divebuddy.domain.model.getLastKnownLocation
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun FinderScreen(
     navController: NavController,
 ) {
-    val maxRange = 0f..1000f;
+    val maxRange = 1f..1000f;
     var sliderPosition by remember { mutableStateOf(0f) }
     val context = LocalContext.current
     var chosenRange = sliderPosition;
 
     val viewModel: FinderViewModel = hiltViewModel()
-    val state = viewModel.state.value
+    var state = viewModel.state.value
+    val allUsers = state.users;
     val isLoading = viewModel.state.value.isLoading
 
     Column() {
@@ -58,14 +61,14 @@ fun FinderScreen(
                     value = sliderPosition,
                     onValueChange = { sliderPosition = it },
                     valueRange = maxRange,
-                    onValueChangeFinished = { chosenRange = sliderPosition }
+                    onValueChangeFinished = { chosenRange = sliderPosition },
                 )
             }
 
             Row(
             ) {
                 Button(
-                    onClick = { search(context, chosenRange) },
+                    onClick = { search(context, chosenRange, viewModel, allUsers) },
                     modifier = Modifier
                         .fillMaxWidth(0.25f),
                 ) {
@@ -80,18 +83,18 @@ fun FinderScreen(
 
         ) {
             if (state.users != null) {
-                items(state.users) { user ->
+                items(state.users!!) { user ->
                     FinderListItem(user = user, onItemClick = {/**/})
                 }
             }
         }
     }
-
 }
 
-fun search(context: Context, chosenRange: Float) {
+fun search(context: Context, chosenRange: Float, viewModel: FinderViewModel, allUsers: List<User>?) {
     val fusedLocationProviderClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
+    var usersInRange: List<User>? = null
     if (ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -107,7 +110,7 @@ fun search(context: Context, chosenRange: Float) {
         //                                          int[] grantResults)
         // to handle the case where the user grants the permission. See the documentation
         // for ActivityCompat#requestPermissions for more details.
-        return
+        // return
     }
     fusedLocationProviderClient.getCurrentLocation(
         LocationRequest.QUALITY_HIGH_ACCURACY,
@@ -121,55 +124,35 @@ fun search(context: Context, chosenRange: Float) {
             Toast.makeText(context, "cannot get location", Toast.LENGTH_SHORT)
                 .show()
         else {
-            // just for testing distance - next 2 lines
-/*            location.latitude = 43.38090
-            location.longitude = 16.56144*/
-            val data = getMockData();
-            findUsersInRangeFromData(data, location, context, chosenRange)
+             //just for testing distance - next 2 lines
+            location.latitude = 43.38090
+            location.longitude = 16.56144
+            //val data = getMockData();
+            usersInRange = findUsersInRange(allUsers, location, context, chosenRange)
+            viewModel.setUsers(usersInRange)
         }
     }
 }
 
-fun findUsersInRangeFromData(
-    data: List<User>,
+fun findUsersInRange(
+    data: List<User>?,
     location: Location,
     context: Context,
     chosenRange: Float
-) {
-    var userName = ""
+): List<User>? {
     var distance: Float = 0F
-    for (user: User in data) {
-        userName = user.name
-        distance = location.distanceTo(user.lastKnownPosition!!)
-        Toast.makeText(
-            context,
-            "loc: ${location.latitude}, ${location.longitude}, Distance: is $distance m",
-            Toast.LENGTH_LONG
-        )
-            .show()
+    var usersInRange: MutableList<User>? = mutableListOf()
+    if (data != null) {
+        for (user: User in data) {
+            distance = location.distanceTo(getLastKnownLocation(user.lat, user.lng))
+            if (toKm(distance) <= chosenRange) {
+                usersInRange!!.add(user)
+            }
+        }
     }
+    return usersInRange;
 }
 
-fun getMockData(): List<User> {
-    val location1 = Location("location 1")
-    var location2: Location?
-    var location3: Location?
-    var location4: Location?
-    var location5: Location?
-
-    //43.38475274396842, 16.557534291996078
-/*    location1.latitude = 43.38442
-    location1.longitude = 16.55815*/
-
-    location1.latitude = 43.38475274396842
-    location1.longitude = 16.557534291996078
-    val user1 =
-        User("1", "User1", "user1@gmail.com", "Croatia", location1)
-/*    val user2 = User("2", "User2", "user2@gmail.com", Country.Croatia)
-    val user3 = User("3", "User3", "user3@gmail.com", Country.Croatia)
-    val user4 = User("4", "User4", "user4@gmail.com", Country.Croatia)
-    val user5 = User("5", "User5", "user5@gmail.com", Country.Croatia)*/
-
-    val users = listOf(user1);
-    return users;
+fun toKm(chosenRange: Float): Float {
+    return chosenRange / 1000
 }

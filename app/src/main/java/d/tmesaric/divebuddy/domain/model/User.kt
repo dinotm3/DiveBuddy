@@ -8,10 +8,12 @@ data class User(
     val name: String = "Test",
     val email: String = "Test",
     val country: String = "Test",
+    val lat: Double = 0.0,
+    val lng: Double = 0.0,
     var lastKnownPosition: Location = Location("Test")
 )
 
-fun getLastKnownPosition(lat: Double, lng: Double): Location {
+fun getLastKnownLocation(lat: Double, lng: Double): Location {
     val lastKnownPosition = Location("Location")
     lastKnownPosition.latitude = lat
     lastKnownPosition.longitude = lng

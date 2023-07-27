@@ -37,6 +37,22 @@ class FinderViewModel @Inject constructor(
             }
         }
     }
+
+    fun setUsers(users: List<User>?) {
+        viewModelScope.launch {
+            try {
+                _state.value = state.value.copy(isLoading = true)
+                _state.value = state.value.copy(
+                    users = users,
+                    isLoading = false
+                )
+            } catch (e: java.lang.Exception) {
+                Log.e("FinderViewModel", "getUsers", e)
+                _state.value = state.value.copy(isLoading = false)
+            }
+        }
+    }
+
     data class UsersState(
         val users: List<User>? = null,
         val isLoading: Boolean = false
