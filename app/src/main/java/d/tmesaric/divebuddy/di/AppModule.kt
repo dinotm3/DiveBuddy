@@ -1,5 +1,7 @@
 package d.tmesaric.divebuddy.di
 
+import android.app.Application
+import android.content.Context
 import d.tmesaric.divebuddy.common.Constants.BASE_URL
 import d.tmesaric.divebuddy.data.UsersApi
 import dagger.Module
@@ -23,5 +25,11 @@ object AppModule {
             .baseUrl(BASE_URL)
             .build()
             .create(UsersApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationContext(application: Application): Context {
+        return application.applicationContext
     }
 }

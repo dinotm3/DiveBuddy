@@ -10,53 +10,70 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
+import d.tmesaric.divebuddy.common.LocationHelper
+import d.tmesaric.divebuddy.data.UsersApi
 import d.tmesaric.divebuddy.domain.model.User
+import kotlinx.coroutines.CompletableDeferred
+import javax.inject.Inject
 
-class LocationClientImpl(
+class LocationClientImpl @Inject constructor(
     private val context: Context,
-    private val client: FusedLocationProviderClient
+    private val client: FusedLocationProviderClient,
 ) : LocationClient {
 
     @SuppressLint("MissingPermission")
-    override fun getLocation(): Location {
-        if (!context.hasLocationPermission()) {
-            throw LocationClient.LocationException("Missing location permission")
+    override suspend fun getLocation(): Location {
+        var userLocation = Location("UserLocation")
+        val userLocationDeferred = CompletableDeferred<Location>()
+
+        if(checkAllPermissions(context)){
+            client.getCurrentLocation(
+                LocationRequest.QUALITY_HIGH_ACCURACY,
+                @SuppressLint("MissingPermission")
+                object : CancellationToken() {
+                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                        CancellationTokenSource().token
+                    override fun isCancellationRequested() = false
+                }
+            ).addOnSuccessListener { location: Location? ->
+                if (location == null)
+                    userLocationDeferred.completeExceptionally(
+                        LocationClient.LocationException("Cannot get location")
+                    )
+                else {
+                    // fake location so it works in emulator,
+                    // comment when testing with real device
+                    location.latitude = 43.38090
+                    location.longitude = 16.56144
+                    userLocation.latitude = location.latitude
+                    userLocation.longitude = location.longitude
+                    userLocationDeferred.complete(location)
+                }
+            }
         }
 
+        userLocation = userLocationDeferred.await()
+        return userLocation;
+    }
+
+    private fun checkAllPermissions(context: Context): Boolean {
+        if (!LocationHelper().checkLocationPermission(context)){
+            LocationHelper().askForLocationPermissions()
+        }
         val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val isNetworkEnabled =
             locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
         if (!isGpsEnabled && !isNetworkEnabled) {
-            throw LocationClient.LocationException("GPS is disabled")
+            return true
         }
-
-        val userLocation = Location("UserLocation")
-        client.getCurrentLocation(
-            LocationRequest.QUALITY_HIGH_ACCURACY,
-            object : CancellationToken() {
-                override fun onCanceledRequested(p0: OnTokenCanceledListener) =
-                    CancellationTokenSource().token
-
-                override fun isCancellationRequested() = false
-            }).addOnSuccessListener { location: Location? ->
-            if (location == null)
-                Toast.makeText(context, "cannot get location", Toast.LENGTH_SHORT)
-                    .show()
-            else {
-                userLocation.latitude = location.latitude
-                userLocation.longitude = location.longitude
-/*                Toast.makeText(context, "User lng is ${location.longitude}, ltd is ${location.latitude}", Toast.LENGTH_LONG)
-                    .show()*/
-            }
-        }
-        return userLocation;
+        return false
     }
 
-    override fun saveLocation(user: User) {
-        user.lastKnownPosition = getLocation()
+    override suspend fun updateLocation(user: User) {
+        val userPosition = getLocation()
+        user.lastKnownPosition = userPosition
     }
 }
 
