@@ -14,8 +14,9 @@ data class User(
 )
 
 fun getLastKnownLocation(lat: Double, lng: Double): Location {
-    val lastKnownPosition = Location("Location")
-    lastKnownPosition.latitude = lat
-    lastKnownPosition.longitude = lng
+    val lastKnownPosition = Location("Location").also {
+        it.latitude = lat
+        it.longitude = lng
+    }
     return lastKnownPosition;
 }

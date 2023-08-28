@@ -1,6 +1,7 @@
 package d.tmesaric.divebuddy.presentation.finder
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -17,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -36,13 +38,16 @@ import d.tmesaric.divebuddy.domain.model.getLastKnownLocation
 fun FinderScreen(
     navController: NavController,
 ) {
-    val maxRange = 1f..1000f
+    val maxRange = 0f..500f
     var sliderPosition by remember { mutableStateOf(0f) }
     val context = LocalContext.current
 
     val viewModel: FinderViewModel = hiltViewModel()
     val state = viewModel.state.value
     val isLoading = state.isLoading
+    var isMessageBoxVisible: Boolean
+    val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
 
     Column {
         Column(
@@ -60,57 +65,14 @@ fun FinderScreen(
                     onValueChange = { sliderPosition = it },
                     valueRange = maxRange,
                     onValueChangeFinished = {
-                        val fusedLocationProviderClient: FusedLocationProviderClient =
-                            LocationServices.getFusedLocationProviderClient(context)
-                        if (ActivityCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            ) == PackageManager.PERMISSION_GRANTED &&
-                            ActivityCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            fusedLocationProviderClient.getCurrentLocation(
-                                LocationRequest.QUALITY_HIGH_ACCURACY,
-                                object : CancellationToken() {
-                                    override fun onCanceledRequested(p0: OnTokenCanceledListener) =
-                                        CancellationTokenSource().token
-
-                                    override fun isCancellationRequested() = false
-                                }
-                            ).addOnSuccessListener { location: Location? ->
-                                if (location == null)
-                                    Toast.makeText(
-                                        context,
-                                        "Cannot get location",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                else {
-                                    location.latitude = 43.38090
-                                    location.longitude = 16.56144
-                                    viewModel.filterUsersInRange(
-                                        sliderPosition,
-                                        location,
-                                        context
-                                    )
-                                }
-                            }
-                        } else {
-                            // Handle the case when location permissions are not granted
-                        }
+                        handleSliderChange(
+                            context,
+                            viewModel,
+                            sliderPosition,
+                            fusedLocationProviderClient
+                        )
                     },
                 )
-            }
-
-            Row {
-                Button(
-                    onClick = { /* Do nothing here, the filtering is handled by the ViewModel */ },
-                    modifier = Modifier
-                        .fillMaxWidth(0.25f),
-                ) {
-                    Text(text = "Search")
-                }
             }
         }
 
@@ -122,7 +84,9 @@ fun FinderScreen(
             // Use filteredUsers state instead of state.users
             if (viewModel.filteredUsers.value != null) {
                 items(viewModel.filteredUsers.value!!) { user ->
-                    FinderListItem(user = user, onItemClick = {/**/})
+                    if (sliderPosition != 0F){
+                        FinderListItem(user = user, onItemClick = {/**/})
+                    }
                 }
             }
         }
@@ -133,6 +97,22 @@ fun FinderScreen(
     }
 }
 
+@Composable
+fun MessageBox(isVisible: Boolean) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        if (isVisible) {
+            Text(
+                text = "Please select distance",
+                modifier = Modifier.padding(16.dp),
+                color = Color.White
+            )
+        }
+    }
+}
 
 fun search(context: Context, chosenRange: Float, viewModel: FinderViewModel, allUsers: List<User>?) {
     val fusedLocationProviderClient: FusedLocationProviderClient =
@@ -176,14 +156,85 @@ fun search(context: Context, chosenRange: Float, viewModel: FinderViewModel, all
     }
 }
 
+
+// Call this function to request permission if needed
+fun checkLocationPermission(context: Context): Boolean {
+    var hasLocationPermission = false
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+        ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        hasLocationPermission = true
+    }
+    return hasLocationPermission
+}
+
+fun askForLocationPermissions() {
+    TODO("Not yet implemented")
+}
+
+@SuppressLint("MissingPermission")
+fun getCurrentUserLocation(
+    fusedLocationProviderClient: FusedLocationProviderClient,
+                           context: Context,
+                           viewModel: FinderViewModel,
+                           sliderPosition: Float
+){
+    fusedLocationProviderClient.getCurrentLocation(
+        LocationRequest.QUALITY_HIGH_ACCURACY,
+        @SuppressLint("MissingPermission")
+        object : CancellationToken() {
+            override fun onCanceledRequested(p0: OnTokenCanceledListener) =
+                CancellationTokenSource().token
+
+            override fun isCancellationRequested() = false
+        }
+    ).addOnSuccessListener { location: Location? ->
+        if (location == null)
+            Toast.makeText(
+                context,
+                "Cannot get location",
+                Toast.LENGTH_SHORT
+            ).show()
+        else {
+            // fake location so it works in emulator,
+            // comment when testing with real device
+            location.latitude = 43.38090
+            location.longitude = 16.56144
+            viewModel.filterUsersInRange(
+                sliderPosition,
+                location,
+                context
+            )
+        }
+    }
+}
+
+fun handleSliderChange(
+    context: Context,
+    viewModel: FinderViewModel,
+    sliderPosition: Float,
+    fusedLocationProviderClient: FusedLocationProviderClient
+) {
+    if (checkLocationPermission(context)) {
+        getCurrentUserLocation(fusedLocationProviderClient, context, viewModel, sliderPosition)
+    } else {
+        askForLocationPermissions()
+    }
+}
 fun findUsersInRange(
     allUsers: List<User>?,
     location: Location,
     context: Context,
     chosenRange: Float
 ): List<User>? {
-    var distance: Float = 0F
-    var usersInRange: MutableList<User>? = mutableListOf()
+    var distance: Float
+    val usersInRange: MutableList<User>? = mutableListOf()
     if (allUsers != null) {
         for (user: User in allUsers) {
             distance = location.distanceTo(getLastKnownLocation(user.lat, user.lng))

@@ -44,7 +44,6 @@ class FinderViewModel @Inject constructor(
                     users = users,
                     isLoading = false
                 )
-
                 // Initialize filteredUsers with all users
                 _filteredUsers.value = users
             } catch (e: Exception) {
