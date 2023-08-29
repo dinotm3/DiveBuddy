@@ -17,8 +17,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
 import d.tmesaric.divebuddy.data.UsersApi
+import d.tmesaric.divebuddy.domain.chat.ChatViewModel
 import d.tmesaric.divebuddy.domain.location.LocationClientImpl
 import d.tmesaric.divebuddy.domain.model.User
+import d.tmesaric.divebuddy.presentation.chat.ChatScreen
 import d.tmesaric.divebuddy.presentation.finder.FinderScreen
 import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
                         composable("profile") { ProfileScreen(navController) }
                         composable("sign_in") { SignInScreen(navController) }
                         composable("finder") { FinderScreen(navController) }
+                        composable("chat") { ChatScreen(ChatViewModel()) }
                     }
                 }
             }

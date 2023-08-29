@@ -43,7 +43,6 @@ fun FinderScreen(
             Row {
                 Text(text = "${sliderPosition.roundToInt()} km")
             }
-
             Row {
                 Slider(
                     value = sliderPosition,
