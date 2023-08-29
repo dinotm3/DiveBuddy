@@ -1,7 +1,5 @@
-package d.tmesaric.divebuddy.domain.chat
+package d.tmesaric.divebuddy.presentation.chat
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers

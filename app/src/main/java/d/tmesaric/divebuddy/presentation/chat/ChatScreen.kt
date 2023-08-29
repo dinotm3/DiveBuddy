@@ -11,7 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import d.tmesaric.divebuddy.domain.chat.ChatViewModel
+import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
 import d.tmesaric.divebuddy.domain.chat.WebSocketListener
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient

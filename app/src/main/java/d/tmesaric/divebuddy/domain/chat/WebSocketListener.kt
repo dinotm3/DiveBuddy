@@ -1,6 +1,7 @@
 package d.tmesaric.divebuddy.domain.chat
 
 import android.util.Log
+import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
 import okhttp3.Response
 import okhttp3.WebSocket
 
