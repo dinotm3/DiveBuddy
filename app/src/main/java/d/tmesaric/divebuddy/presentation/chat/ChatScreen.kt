@@ -18,21 +18,25 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import androidx.compose.runtime.*
 import d.tmesaric.divebuddy.common.Constants.BASE_URL_WEB_SOCKET
+import okhttp3.WebSocket
 
 @Composable
 fun ChatScreen(viewModel: ChatViewModel) {
     val webSocketListener = remember { WebSocketListener(viewModel) }
     val okHttpClient = OkHttpClient()
+    var webSocket: WebSocket? = null
     val coroutineScope = rememberCoroutineScope()
     val isConnected by viewModel.socketStatus.collectAsState(false)
     val messages by viewModel.messages.collectAsState(emptyList())
+    val connectionStatusText = if (isConnected) "Connected" else "Disconnected"
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = if (isConnected) "Connected" else "Disconnected")
+
+        Text(text = connectionStatusText)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -53,10 +57,16 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 val request = Request.Builder()
                     .url(BASE_URL_WEB_SOCKET)
                     .build()
-                okHttpClient.newWebSocket(request, webSocketListener)
+                webSocket = okHttpClient.newWebSocket(request, webSocketListener)
             }
         }) {
             Text(text = "Connect")
+        }
+
+        Button(onClick = {
+            webSocket?.close(1000, "Canceled by user")
+        }) {
+            Text(text = "Disconnect")
         }
     }
 }

@@ -1,5 +1,6 @@
 package d.tmesaric.divebuddy.presentation.chat
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -18,10 +19,12 @@ class ChatViewModel : ViewModel() {
     fun addMessage(message: Pair<Boolean, String>) {
         viewModelScope.launch(Dispatchers.Main) {
             _messages.value = _messages.value + message
+            Log.d("Test", "addMessage: " + _messages.value)
         }
     }
 
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         _socketStatus.value = status
+        Log.d("Test", "socketStatus: " + _socketStatus.value)
     }
 }
