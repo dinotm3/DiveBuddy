@@ -18,6 +18,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -27,14 +28,10 @@ fun FinderScreen(
     val maxRange = 0f..500f
     var sliderPosition by remember { mutableStateOf(0f) }
     val context = LocalContext.current
-
     val viewModel: FinderViewModel = hiltViewModel()
     val state = viewModel.state.value
     val isLoading = state.isLoading
-    var isMessageBoxVisible: Boolean
-    val fusedLocationProviderClient: FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context)
-
+    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     val locationHelper = LocationHelper()
 
     Column {
@@ -44,7 +41,7 @@ fun FinderScreen(
                 .fillMaxHeight(0.15F)
         ) {
             Row {
-                Text(text = "$sliderPosition km")
+                Text(text = "${sliderPosition.roundToInt()} km")
             }
 
             Row {

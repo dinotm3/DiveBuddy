@@ -51,7 +51,6 @@ class LocationClientImpl @Inject constructor(
                 }
             }
         }
-
         userLocation = userLocationDeferred.await()
         return userLocation;
     }
@@ -65,7 +64,7 @@ class LocationClientImpl @Inject constructor(
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val isNetworkEnabled =
             locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (!isGpsEnabled && !isNetworkEnabled) {
+        if (isGpsEnabled && isNetworkEnabled) {
             return true
         }
         return false

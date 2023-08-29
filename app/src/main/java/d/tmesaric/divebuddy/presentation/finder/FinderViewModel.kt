@@ -100,7 +100,7 @@ class FinderViewModel @Inject constructor(
     }
 
     private fun toKm(chosenRange: Float): Float {
-        return chosenRange / 1000
+        return (chosenRange / 1000)
     }
 
     data class UsersState(

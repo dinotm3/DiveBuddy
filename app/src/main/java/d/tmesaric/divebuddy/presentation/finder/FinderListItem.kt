@@ -29,6 +29,7 @@ fun FinderListItem(
     Card(
         modifier = Modifier
             .padding(
+                6.dp
 /*                horizontal = LocalSpacing.current.medium,
                 vertical = LocalSpacing.current.small*/
             )
@@ -52,12 +53,12 @@ fun FinderListItem(
                 modifier = Modifier.size(IMAGE_MODIFIER)
             )*/
             Text(
-                text = "${user.name}. \nCountry: ${user.country}\n",
+                text = "${user.name}. \nCountry: ${user.country}. \nLorem ipsum \nLorem ipsum",
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .align(Alignment.Bottom))
+                    .align(Alignment.Bottom)
+                    .padding(20.dp))
         }
     }
 }
