@@ -61,12 +61,15 @@ class LocationClientImpl @Inject constructor(
         }
         val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isGpsEnabled =
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val isNetworkEnabled =
             locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         if (isGpsEnabled && isNetworkEnabled) {
             return true
         }
+        if (!isGpsEnabled) throw LocationClient.LocationException("Gps not available")
+        if (!isNetworkEnabled) throw LocationClient.LocationException("Network unavailable")
         return false
     }
 

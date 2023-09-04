@@ -6,7 +6,7 @@ import retrofit2.http.POST
 
 interface UsersApi {
     @GET("/user")
-    suspend fun getUser(id: String): User
+    suspend fun getUser(id: Int): User
 
     @GET("/users")
     suspend fun getUsers(): List<User>

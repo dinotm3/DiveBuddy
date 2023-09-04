@@ -1,8 +1,6 @@
 package d.tmesaric.divebuddy.presentation.chat
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,16 +8,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
 import d.tmesaric.divebuddy.domain.chat.WebSocketListener
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import androidx.compose.runtime.*
 import d.tmesaric.divebuddy.common.Constants.BASE_URL_WEB_SOCKET
-import d.tmesaric.divebuddy.presentation.finder.FinderListItem
-import kotlinx.coroutines.flow.toList
+import d.tmesaric.divebuddy.domain.model.Chat
+import d.tmesaric.divebuddy.domain.model.User
 import okhttp3.WebSocket
 
 @Composable
@@ -36,11 +32,33 @@ fun ChatScreen(viewModel: ChatViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        val user1 = User(1, "Luka", "luka@test.com", "hrv", 0.0, 0.0, null, null)
+        val user2 = User(2, "Borna", "borna@test.com", "hrv", 0.0, 0.0, null, null)
+
+        var slug: String? = null
+        if (user1.chats != null) {
+            for (chat in user1.chats) {
+                if (user2.chats?.contains(chat) == true) {
+                    slug = chat.id.toString()
+                    break
+                } else {
+                    slug = user1.id.toString() + user2.id.toString()
+                    user1.chats.add(chat)
+                    user2.chats?.add(chat)
+                }
+            }
+        } else {
+            slug = user1.id.toString() + user2.id.toString()
+            val chat = Chat(slug.toInt(), user1.id, user2.id)
+            user1.chats?.add(chat)
+            user2.chats?.add(chat)
+        }
+
 
         Button(onClick = {
             coroutineScope.launch {
                 val request = Request.Builder()
-                    .url(BASE_URL_WEB_SOCKET)
+                    .url("$BASE_URL_WEB_SOCKET/${slug}")
                     .build()
                 webSocket = okHttpClient.newWebSocket(request, webSocketListener)
             }

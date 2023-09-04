@@ -69,7 +69,6 @@ class LocationHelper {
                 viewModel.filterUsersInRange(
                     sliderPosition,
                     location,
-                    context
                 )
             }
         }

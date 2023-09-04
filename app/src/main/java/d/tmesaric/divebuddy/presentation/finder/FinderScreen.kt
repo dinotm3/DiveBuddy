@@ -18,6 +18,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
+import d.tmesaric.divebuddy.domain.model.User
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalCoilApi::class)
@@ -74,7 +75,11 @@ fun FinderScreen(
             if (viewModel.filteredUsers.value != null) {
                 items(viewModel.filteredUsers.value!!) { user ->
                     if (sliderPosition != 0F){
-                        FinderListItem(user = user, onItemClick = {/**/})
+                        FinderListItem(user = user, onItemClick = {
+
+                            navController.navigate("chat")
+
+                        })
                     }
                 }
             }

@@ -13,13 +13,8 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
-import d.tmesaric.divebuddy.data.UsersApi
-import d.tmesaric.divebuddy.domain.chat.ChatRepository
 import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
-import d.tmesaric.divebuddy.domain.location.LocationClientImpl
 import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.presentation.chat.ChatScreen
 import d.tmesaric.divebuddy.presentation.finder.FinderScreen

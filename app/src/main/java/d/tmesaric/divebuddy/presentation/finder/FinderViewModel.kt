@@ -1,22 +1,18 @@
 package d.tmesaric.divebuddy.presentation.finder
 
-import android.app.Application
 import android.content.Context
 import android.location.Location
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import d.tmesaric.divebuddy.common.LocationHelper
 import d.tmesaric.divebuddy.data.UsersApi
 import d.tmesaric.divebuddy.domain.location.LocationClientImpl
 import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.domain.model.getLastKnownLocation
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,8 +63,8 @@ class FinderViewModel @Inject constructor(
                 locationClient.getLocation()
                 api.updateUserPosition(
                     user.id,
-                    user.lastKnownPosition.latitude,
-                    user.lastKnownPosition.longitude
+                    user.lastKnownPosition!!.latitude,
+                    user.lastKnownPosition!!.longitude
                 )
             } catch (e: Exception) {
                 Log.e("FinderViewModel", "getAndUpdateUserLocation", e)
@@ -76,7 +72,7 @@ class FinderViewModel @Inject constructor(
         }
     }
 
-    fun filterUsersInRange(chosenRange: Float, location: Location, context: Context) {
+    fun filterUsersInRange(chosenRange: Float, location: Location) {
         val usersInRange = findUsersInRange(state.value.users, location, chosenRange)
         _filteredUsers.value = usersInRange
     }
