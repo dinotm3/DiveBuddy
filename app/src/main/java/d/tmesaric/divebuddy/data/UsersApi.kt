@@ -12,5 +12,5 @@ interface UsersApi {
     suspend fun getUsers(): List<User>
 
     @POST("/user/update/location")
-    suspend fun updateUserPosition(id: String, lat: Double, lng: Double)
+    suspend fun updateUserPosition(id: Int, lat: Double, lng: Double)
 }

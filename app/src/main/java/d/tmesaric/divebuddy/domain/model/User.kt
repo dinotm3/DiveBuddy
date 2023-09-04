@@ -4,7 +4,7 @@ import android.location.Location
 import com.google.android.gms.location.LocationServices
 
 data class User(
-    val id: String = "Test",
+    val id: Int = 1,
     val name: String = "Test",
     val email: String = "Test",
     val country: String = "Test",

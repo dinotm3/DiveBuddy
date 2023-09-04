@@ -18,6 +18,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import androidx.compose.runtime.*
 import d.tmesaric.divebuddy.common.Constants.BASE_URL_WEB_SOCKET
+import d.tmesaric.divebuddy.presentation.finder.FinderListItem
+import kotlinx.coroutines.flow.toList
 import okhttp3.WebSocket
 
 @Composable
@@ -27,8 +29,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
     var webSocket: WebSocket? = null
     val coroutineScope = rememberCoroutineScope()
     val isConnected by viewModel.socketStatus.collectAsState(false)
-    val messages by viewModel.messages.collectAsState(emptyList())
-    val connectionStatusText = if (isConnected) "Connected" else "Disconnected"
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -36,21 +36,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(text = connectionStatusText)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn {
-            items(messages) { message ->
-                val (isUser, text) = message
-                Text(
-                    text = "${if (isUser) "You: " else "Other: "} $text",
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
             coroutineScope.launch {
@@ -67,6 +52,14 @@ fun ChatScreen(viewModel: ChatViewModel) {
             webSocket?.close(1000, "Canceled by user")
         }) {
             Text(text = "Disconnect")
+        }
+
+        Button(onClick = {
+            webSocket?.send("Message from Android")
+            viewModel.sendChatMessage("user", "Message from Android")
+
+        }) {
+            Text(text = "Send message")
         }
     }
 }

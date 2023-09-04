@@ -17,6 +17,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
 import d.tmesaric.divebuddy.data.UsersApi
+import d.tmesaric.divebuddy.domain.chat.ChatRepository
 import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
 import d.tmesaric.divebuddy.domain.location.LocationClientImpl
 import d.tmesaric.divebuddy.domain.model.User
@@ -67,3 +68,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
