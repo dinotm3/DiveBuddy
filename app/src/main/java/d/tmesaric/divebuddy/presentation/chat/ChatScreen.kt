@@ -32,33 +32,13 @@ fun ChatScreen(viewModel: ChatViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val user1 = User(1, "Luka", "luka@test.com", "hrv", 0.0, 0.0, null, null)
-        val user2 = User(2, "Borna", "borna@test.com", "hrv", 0.0, 0.0, null, null)
-
-        var slug: String? = null
-        if (user1.chats != null) {
-            for (chat in user1.chats) {
-                if (user2.chats?.contains(chat) == true) {
-                    slug = chat.id.toString()
-                    break
-                } else {
-                    slug = user1.id.toString() + user2.id.toString()
-                    user1.chats.add(chat)
-                    user2.chats?.add(chat)
-                }
-            }
-        } else {
-            slug = user1.id.toString() + user2.id.toString()
-            val chat = Chat(slug.toInt(), user1.id, user2.id)
-            user1.chats?.add(chat)
-            user2.chats?.add(chat)
-        }
-
+        val user1 = User(4, "Luka", "luka@test.com", "hrv", 0.0, 0.0, null, null)
+        val user2 = User(5, "Borna", "borna@test.com", "hrv", 0.0, 0.0, null, null)
 
         Button(onClick = {
             coroutineScope.launch {
                 val request = Request.Builder()
-                    .url("$BASE_URL_WEB_SOCKET/${slug}")
+                    .url("$BASE_URL_WEB_SOCKET/${user1.id}/${user2.id}")
                     .build()
                 webSocket = okHttpClient.newWebSocket(request, webSocketListener)
             }
@@ -74,7 +54,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
         Button(onClick = {
             webSocket?.send("Message from Android")
-            viewModel.sendChatMessage("user", "Message from Android")
+            //viewModel.sendChatMessage("user", "Message from Android")
 
         }) {
             Text(text = "Send message")

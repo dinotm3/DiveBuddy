@@ -34,14 +34,15 @@ class ChatViewModel() : ViewModel()  {
         _chatMessages.value = chatMessages.value + message
     }
 
-    fun addMessage(message: String) {
+/*    fun addMessage(message: String) {
         viewModelScope.launch(Dispatchers.Main) {
             if(_socketStatus.value) {
                 _messages.value = _messages.value + message
             }
-            Log.d("Test", "addMessage: " + _messages.value)
         }
-    }
+        Log.d("Test", "addMessage: $message")
+
+    }*/
 
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         _socketStatus.value = status
