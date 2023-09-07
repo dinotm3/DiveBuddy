@@ -44,6 +44,7 @@ class ChatViewModel() : ViewModel()  {
 
     }*/
 
+
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {
         _socketStatus.value = status
         Log.d("Test", "socketStatus: " + _socketStatus.value)

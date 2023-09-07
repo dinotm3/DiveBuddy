@@ -36,6 +36,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
         val user2 = User(5, "Borna", "borna@test.com", "hrv", 0.0, 0.0, null, null)
 
         Button(onClick = {
+            // TODO move to init{} and remove this button - leave like this for now because of easier testing!
             coroutineScope.launch {
                 val request = Request.Builder()
                     .url("$BASE_URL_WEB_SOCKET/${user1.id}/${user2.id}")
@@ -47,12 +48,14 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
 
         Button(onClick = {
+            // TODO: use viewModel here for better abstraction - add close function
             webSocket?.close(1000, "Canceled by user")
         }) {
             Text(text = "Disconnect")
         }
 
         Button(onClick = {
+            // TODO: same here like for disconnect
             webSocket?.send("Message from Android")
             //viewModel.sendChatMessage("user", "Message from Android")
 

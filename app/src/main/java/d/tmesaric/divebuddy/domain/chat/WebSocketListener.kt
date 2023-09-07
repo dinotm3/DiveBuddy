@@ -9,7 +9,7 @@ class WebSocketListener(
     private val viewModel: ChatViewModel
 ): okhttp3.WebSocketListener() {
 
-    private val TAG = "Test"
+    private val TAG = "WebSocket"
     // on open we send Android device Connected
     override fun onOpen(webSocket: WebSocket, response: Response) {
         super.onOpen(webSocket, response)
@@ -32,6 +32,7 @@ class WebSocketListener(
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
         super.onClosed(webSocket, code, reason)
         viewModel.setStatus(false)
+        //viewModel.closeConnection()
         Log.d(TAG, "onClosed: $code $reason")
     }
 
