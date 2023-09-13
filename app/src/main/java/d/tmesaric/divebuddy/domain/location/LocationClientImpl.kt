@@ -29,7 +29,6 @@ class LocationClientImpl @Inject constructor(
         if(checkAllPermissions(context)){
             client.getCurrentLocation(
                 LocationRequest.QUALITY_HIGH_ACCURACY,
-                @SuppressLint("MissingPermission")
                 object : CancellationToken() {
                     override fun onCanceledRequested(p0: OnTokenCanceledListener) =
                         CancellationTokenSource().token
@@ -56,22 +55,28 @@ class LocationClientImpl @Inject constructor(
     }
 
     private fun checkAllPermissions(context: Context): Boolean {
-        if (!LocationHelper().checkLocationPermission(context)){
-            LocationHelper().askForLocationPermissions()
-        }
-        val locationManager =
-            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val isGpsEnabled =
-            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        val isNetworkEnabled =
-            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (isGpsEnabled && isNetworkEnabled) {
+        try {
+            if (!LocationHelper().checkLocationPermission(context)) {
+                if(!LocationHelper().askForLocationPermissions())
+                    return false
+            }
+            val locationManager =
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            ) {
+                return false
+            }
             return true
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            return false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
         }
-        if (!isGpsEnabled) throw LocationClient.LocationException("Gps not available")
-        if (!isNetworkEnabled) throw LocationClient.LocationException("Network unavailable")
-        return false
     }
+
 
     override suspend fun updateLocation(user: User) {
         val userPosition = getLocation()

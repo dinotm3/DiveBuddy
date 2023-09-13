@@ -34,7 +34,7 @@ class LocationHelper {
         return hasLocationPermission
     }
 
-    fun askForLocationPermissions() {
+    fun askForLocationPermissions(): Boolean {
         TODO("Not yet implemented")
     }
 

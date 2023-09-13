@@ -67,7 +67,7 @@ class FinderViewModel @Inject constructor(
                     user.lastKnownPosition!!.longitude
                 )
             } catch (e: Exception) {
-                Log.e("FinderViewModel", "getAndUpdateUserLocation", e)
+                Log.e("FinderViewModel", "getAndUpdateUserLocation error: $e")
             }
         }
     }

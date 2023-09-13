@@ -1,23 +1,27 @@
 package d.tmesaric.divebuddy.presentation.finder
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import d.tmesaric.divebuddy.domain.model.User
+import d.tmesaric.divebuddy.ui.theme.DarkBlue
 
 
 private val IMAGE_MODIFIER = 90.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalCoilApi
 @Composable
@@ -25,40 +29,59 @@ fun FinderListItem(
     user: User,
     onItemClick: (User) -> Unit
 ) {
-
     Card(
         modifier = Modifier
-            .padding(
-                6.dp
-/*                horizontal = LocalSpacing.current.medium,
-                vertical = LocalSpacing.current.small*/
-            )
+            .padding(2.dp)
             .fillMaxWidth(),
-/*        elevation = LocalSpacing.current.mini,
-        backgroundColor = Color.DarkGray,
-        shape = RoundedCornerShape(corner = CornerSize(LocalSpacing.current.large))*/
+        colors = CardDefaults.cardColors(containerColor = DarkBlue)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onItemClick(user) }
-/*                .padding(LocalSpacing.current.small),
-            horizontalArrangement = Arrangement.SpaceBetween*/
         ) {
-            //val painter = rememberImagePainter(data = File(article.picturePath!!))
-/*            Image(
-                // painter = painter
+            Image(
                 painter = painterResource(id = d.tmesaric.divebuddy.R.drawable.ic_launcher_background),
                 contentDescription = null,
-                modifier = Modifier.size(IMAGE_MODIFIER)
-            )*/
+                modifier = Modifier
+                    .size(IMAGE_MODIFIER)
+                    .padding(5.dp)
+                    .clip(CircleShape)
+            )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Fill equally in terms of width
+                    .padding(8.dp)
+            )
+            {
+                Text(
+                    text = "${user.name}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = "Country: ${user.country}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
             Text(
-                text = "${user.name}. \nCountry: ${user.country}. \nLorem ipsum \nLorem ipsum",
+                text = "Lorem ipsum \nLorem ipsum",
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(20.dp))
+                    .weight(1f)
+                    .padding(8.dp)
+            )
         }
     }
+}
+
+@Preview
+@Composable
+fun FinderListItemPreview() {
+    val user = User(1, "John Doe") // Replace with actual user data
+    FinderListItem(user = user, onItemClick = {})
 }
