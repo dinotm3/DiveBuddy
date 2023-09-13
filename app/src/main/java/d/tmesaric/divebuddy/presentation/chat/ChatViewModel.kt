@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
-import d.tmesaric.divebuddy.domain.chat.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 class ChatViewModel() : ViewModel()  {
 
-    private val chatRepository = ChatRepository()
+    //private val chatRepository = ChatRepository()
 
     private val _socketStatus = MutableStateFlow(false)
     val socketStatus: StateFlow<Boolean> = _socketStatus
@@ -26,7 +25,7 @@ class ChatViewModel() : ViewModel()  {
 
     fun sendChatMessage(senderId: String, content: String) {
         viewModelScope.launch {
-            chatRepository.sendChatMessage(senderId, content)
+            //chatRepository.sendChatMessage(senderId, content)
         }
     }
 

@@ -1,6 +1,7 @@
 package d.tmesaric.divebuddy.presentation.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
+import d.tmesaric.divebuddy.ui.theme.DarkBlue
 import okhttp3.WebSocket
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -76,8 +78,50 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
     // CHATGPT
     var text by remember { mutableStateOf("") }
-    //var messages by remember { mutableStateOf(listOf<Message>()) }
-    var messages by remember { mutableStateOf(listOf<String>()) }
+    //var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
+
+    val messages = listOf(
+        ChatMessage(
+            isSentByUser = false,
+            content = "Hello!",
+            timestamp = System.currentTimeMillis()
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "Hi there!",
+            timestamp = System.currentTimeMillis() + 1000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "How are you?",
+            timestamp = System.currentTimeMillis() + 2000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "I'm doing well, thanks!",
+            timestamp = System.currentTimeMillis() + 3000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "That's great to hear!",
+            timestamp = System.currentTimeMillis() + 4000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "Yes, it is!",
+            timestamp = System.currentTimeMillis() + 5000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "Have a nice day!",
+            timestamp = System.currentTimeMillis() + 6000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "You too!",
+            timestamp = System.currentTimeMillis() + 7000
+        )
+    )
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -93,9 +137,13 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 .fillMaxWidth(),
             contentPadding = PaddingValues(8.dp)
         ) {
-/*            items(messages) { message ->
-                ChatMessage(message = message)
-            }*/
+            items(messages.size) { index ->
+                ChatMessageItem(
+                    isSentByUser = messages[index].isSentByUser,
+                    content = messages[index].content,
+                    //timestamp = messages[index].timestamp,
+                )
+            }
         }
 
         // Message Input
@@ -103,6 +151,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .border(1.dp, DarkBlue)
         ) {
             BasicTextField(
                 value = text,

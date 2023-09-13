@@ -37,10 +37,6 @@ fun FinderScreen(
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     val locationHelper = LocationHelper()
 
-    var scubaChecked by remember { mutableStateOf(false) }
-    var freedivingChecked by remember { mutableStateOf(false) }
-    var spearfishingChecked by remember { mutableStateOf(false) }
-
     val sliderColors = SliderDefaults.colors(
         thumbColor = Color.Black,
         activeTrackColor = Color.Black,
