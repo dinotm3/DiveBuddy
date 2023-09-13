@@ -5,13 +5,10 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationManager
 import android.location.LocationRequest
-import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
-import d.tmesaric.divebuddy.common.LocationHelper
-import d.tmesaric.divebuddy.data.UsersApi
 import d.tmesaric.divebuddy.domain.model.User
 import kotlinx.coroutines.CompletableDeferred
 import javax.inject.Inject

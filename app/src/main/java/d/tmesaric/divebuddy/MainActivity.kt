@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import d.tmesaric.divebuddy.common.LocationHelper
+import d.tmesaric.divebuddy.domain.location.LocationHelper
 import d.tmesaric.divebuddy.presentation.chat.ChatViewModel
 import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.presentation.chat.ChatScreen

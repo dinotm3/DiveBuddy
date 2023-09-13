@@ -1,12 +1,10 @@
 package d.tmesaric.divebuddy
 
 import android.app.Application
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import d.tmesaric.divebuddy.common.LocationHelper
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

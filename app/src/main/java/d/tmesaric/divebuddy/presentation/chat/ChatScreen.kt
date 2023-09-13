@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
 import d.tmesaric.divebuddy.ui.theme.DarkBlue
+import d.tmesaric.divebuddy.ui.theme.DeepBlue
 import okhttp3.WebSocket
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -128,7 +129,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
     ) {
         // Chat Messages
         LazyColumn(
@@ -141,7 +141,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 ChatMessageItem(
                     isSentByUser = messages[index].isSentByUser,
                     content = messages[index].content,
-                    //timestamp = messages[index].timestamp,
+                    //timestamp = messages[index].timestamp.toString(),
                 )
             }
         }

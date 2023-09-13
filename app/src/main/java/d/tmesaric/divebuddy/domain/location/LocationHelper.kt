@@ -1,4 +1,4 @@
-package d.tmesaric.divebuddy.common
+package d.tmesaric.divebuddy.domain.location
 
 import android.Manifest
 import android.annotation.SuppressLint

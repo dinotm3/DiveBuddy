@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -18,7 +17,7 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import d.tmesaric.divebuddy.common.LocationHelper
+import d.tmesaric.divebuddy.domain.location.LocationHelper
 import d.tmesaric.divebuddy.ui.theme.DeepBlue
 import d.tmesaric.divebuddy.ui.theme.White
 import kotlin.math.roundToInt

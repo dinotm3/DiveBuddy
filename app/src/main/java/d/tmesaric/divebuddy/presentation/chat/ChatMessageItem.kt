@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ChatMessageItem(isSentByUser: Boolean, content: String) {
-    val backgroundColor = if (isSentByUser) Color(0xFFDCF8C6) else Color(0xFFFFFFFF)
+    val lightBlueishColor = Color(0x8037BFFF)
+    val backgroundColor = if (isSentByUser) lightBlueishColor else Color(0xFFFFFFFF)
     val borderColor = if (isSentByUser) Color(0xFF4CAF50) else Color.Gray
     val textColor = if (isSentByUser) Color.Black else Color.Black
     val alignment = if (isSentByUser) Alignment.CenterEnd else Alignment.CenterStart
