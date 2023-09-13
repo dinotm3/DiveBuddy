@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -53,28 +54,48 @@ fun FinderListItem(
                 modifier = Modifier
                     .weight(1f) // Fill equally in terms of width
                     .padding(8.dp)
+                    .align(CenterVertically)
             )
             {
                 Text(
-                    text = "${user.name}",
+                    text = user.name,
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = "Country: ${user.country}",
+                    text = user.country,
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = "Level: Master",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-
-            Text(
-                text = "Lorem ipsum \nLorem ipsum",
-                style = MaterialTheme.typography.bodySmall,
-                overflow = TextOverflow.Ellipsis,
+            Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f) // Fill equally in terms of width
                     .padding(8.dp)
+                    .align(CenterVertically)
             )
+            {
+                Text(
+                    text = "MaxDepth: 20m",
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = "MaxDynamic: 100m",
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = "MaxStatic: 5 min",
+                    style = MaterialTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -82,6 +103,6 @@ fun FinderListItem(
 @Preview
 @Composable
 fun FinderListItemPreview() {
-    val user = User(1, "John Doe") // Replace with actual user data
+    val user = User(1, "John Doe")
     FinderListItem(user = user, onItemClick = {})
 }

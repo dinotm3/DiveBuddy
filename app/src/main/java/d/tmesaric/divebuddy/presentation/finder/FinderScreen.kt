@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -18,7 +19,6 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import d.tmesaric.divebuddy.common.LocationHelper
-import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.ui.theme.DeepBlue
 import d.tmesaric.divebuddy.ui.theme.White
 import kotlin.math.roundToInt
@@ -51,41 +51,38 @@ fun FinderScreen(
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
-            .background(DeepBlue)
+            .background(DeepBlue),
     ) {
-        Row(
+/*        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.15F)
+                .fillMaxHeight(0.09F)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(2.dp)
+                    .padding(20.dp)
+                    .align(CenterVertically)
             ) {
                 Checkbox(
                     checked = scubaChecked,
                     onCheckedChange = { isChecked -> scubaChecked = isChecked },
-                    modifier = Modifier.padding(end = 8.dp),
                 )
-                Text(text = "Scuba")
+                Text(text = "Pool")
                 Checkbox(
                     checked = freedivingChecked,
                     onCheckedChange = { isChecked -> freedivingChecked = isChecked },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text(text = "Freediving")
-                Checkbox(
-                    checked = spearfishingChecked,
-                    onCheckedChange = { isChecked -> spearfishingChecked = isChecked },
-                    modifier = Modifier.padding(end = 8.dp)
-                )
-                Text(text = "Spearfishing")
+
+                    )
+                Text(text = "Sea")
             }
-        }
+        }*/
 
         Row {
-            Text(text = "${sliderPosition.roundToInt()} km")
+            Text(
+                text = "Search range: ${sliderPosition.roundToInt()} km",
+                modifier = Modifier.padding(6.dp)
+            )
         }
 
         Slider(
@@ -113,7 +110,6 @@ fun FinderScreen(
                 .fillMaxSize()
                 .padding(4.dp)
         ) {
-            // Use filteredUsers state instead of state.users
             if (viewModel.filteredUsers.value != null) {
                 items(viewModel.filteredUsers.value!!) { user ->
                     if (sliderPosition != 0F) {
@@ -133,10 +129,15 @@ fun handleSliderChange(
     viewModel: FinderViewModel,
     sliderPosition: Float,
     locationHelper: LocationHelper,
-    fusedLocationProviderClient:FusedLocationProviderClient
+    fusedLocationProviderClient: FusedLocationProviderClient
 ) {
     if (locationHelper.checkLocationPermission(context)) {
-        locationHelper.updateRangeFilter(fusedLocationProviderClient, context, viewModel, sliderPosition)
+        locationHelper.updateRangeFilter(
+            fusedLocationProviderClient,
+            context,
+            viewModel,
+            sliderPosition
+        )
     } else {
         locationHelper.askForLocationPermissions()
     }

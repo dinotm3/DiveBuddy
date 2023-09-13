@@ -1,23 +1,32 @@
 package d.tmesaric.divebuddy.presentation.chat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import d.tmesaric.divebuddy.domain.chat.WebSocketListener
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import androidx.compose.runtime.*
-import d.tmesaric.divebuddy.common.Constants.BASE_URL_WEB_SOCKET
-import d.tmesaric.divebuddy.domain.model.Chat
-import d.tmesaric.divebuddy.domain.model.User
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import d.tmesaric.divebuddy.domain.chat.ChatMessage
 import okhttp3.WebSocket
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatScreen(viewModel: ChatViewModel) {
     val webSocketListener = remember { WebSocketListener(viewModel) }
@@ -26,7 +35,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val isConnected by viewModel.socketStatus.collectAsState(false)
 
-    Column(
+    /*Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -61,6 +70,76 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
         }) {
             Text(text = "Send message")
+        }
+    }*/
+
+
+    // CHATGPT
+    var text by remember { mutableStateOf("") }
+    //var messages by remember { mutableStateOf(listOf<Message>()) }
+    var messages by remember { mutableStateOf(listOf<String>()) }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        // Chat Messages
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+/*            items(messages) { message ->
+                ChatMessage(message = message)
+            }*/
+        }
+
+        // Message Input
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            BasicTextField(
+                value = text,
+                onValueChange = { newText ->
+                    text = newText
+                },
+                textStyle = TextStyle(fontSize = 16.sp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Send
+                ),
+                keyboardActions = KeyboardActions(
+                    onSend = {
+/*                        if (text.isNotBlank()) {
+                            messages = messages + Message(text, true)
+                            text = ""
+                            keyboardController?.hide()
+                        }*/
+                    }
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(8.dp)
+            )
+
+            Button(
+                onClick = {
+/*                    if (text.isNotBlank()) {
+                        messages = messages + Message(text, true)
+                        text = ""
+                    }*/
+                },
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
+                Text(text = "Send")
+            }
         }
     }
 }
