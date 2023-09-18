@@ -1,5 +1,6 @@
 package d.tmesaric.divebuddy.presentation.chat
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -18,12 +19,16 @@ import d.tmesaric.divebuddy.domain.chat.WebSocketListener
 import okhttp3.OkHttpClient
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import d.tmesaric.divebuddy.R
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
 import d.tmesaric.divebuddy.ui.theme.DarkBlue
 import d.tmesaric.divebuddy.ui.theme.DeepBlue
@@ -76,8 +81,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
     }*/
 
-
-    // CHATGPT
     var text by remember { mutableStateOf("") }
     //var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
 
@@ -121,73 +124,126 @@ fun ChatScreen(viewModel: ChatViewModel) {
             isSentByUser = true,
             content = "You too!",
             timestamp = System.currentTimeMillis() + 7000
-        )
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "Hello!",
+            timestamp = System.currentTimeMillis()
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "Hi there!",
+            timestamp = System.currentTimeMillis() + 1000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "How are you?",
+            timestamp = System.currentTimeMillis() + 2000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "I'm doing well, thanks!",
+            timestamp = System.currentTimeMillis() + 3000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "That's great to hear!",
+            timestamp = System.currentTimeMillis() + 4000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "Yes, it is!",
+            timestamp = System.currentTimeMillis() + 5000
+        ),
+        ChatMessage(
+            isSentByUser = false,
+            content = "Have a nice day!",
+            timestamp = System.currentTimeMillis() + 6000
+        ),
+        ChatMessage(
+            isSentByUser = true,
+            content = "You too!",
+            timestamp = System.currentTimeMillis() + 7000
+        ),
+
     )
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // Chat Messages
-        LazyColumn(
+        Image(
+            painter = painterResource(id = R.drawable.bubbles), // Replace with your image resource
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(8.dp)
+                .fillMaxSize(),
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            items(messages.size) { index ->
-                ChatMessageItem(
-                    isSentByUser = messages[index].isSentByUser,
-                    content = messages[index].content,
-                    //timestamp = messages[index].timestamp.toString(),
-                )
+            // Chat Messages
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(8.dp)
+            ) {
+                items(messages.size) { index ->
+                    ChatMessageItem(
+                        isSentByUser = messages[index].isSentByUser,
+                        content = messages[index].content,
+                        //timestamp = messages[index].timestamp.toString(),
+                    )
+                }
             }
-        }
 
-        // Message Input
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .border(1.dp, DarkBlue)
-        ) {
-            BasicTextField(
-                value = text,
-                onValueChange = { newText ->
-                    text = newText
-                },
-                textStyle = TextStyle(fontSize = 16.sp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Send
-                ),
-                keyboardActions = KeyboardActions(
-                    onSend = {
+            // Message Input
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .border(1.dp, DarkBlue)
+            ) {
+                BasicTextField(
+                    value = text,
+                    onValueChange = { newText ->
+                        text = newText
+                    },
+                    textStyle = TextStyle(fontSize = 16.sp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Send
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSend = {
 /*                        if (text.isNotBlank()) {
                             messages = messages + Message(text, true)
                             text = ""
                             keyboardController?.hide()
                         }*/
-                    }
-                ),
-                modifier = Modifier
-                    .weight(1f)
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(8.dp)
-            )
+                        }
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(8.dp)
+                )
 
-            Button(
-                onClick = {
+                Button(
+                    onClick = {
 /*                    if (text.isNotBlank()) {
                         messages = messages + Message(text, true)
                         text = ""
                     }*/
-                },
-                modifier = Modifier.padding(start = 8.dp)
-            ) {
-                Text(text = "Send")
+                    },
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(text = "Send")
+                }
             }
         }
     }

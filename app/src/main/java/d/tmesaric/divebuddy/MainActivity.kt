@@ -1,14 +1,23 @@
 package d.tmesaric.divebuddy
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,16 +31,21 @@ import d.tmesaric.divebuddy.ui.theme.DiveBuddyTheme
 import d.tmesaric.divebuddy.presentation.profile.ProfileScreen
 import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
 import d.tmesaric.divebuddy.utils.redirect
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var locationHelper = LocationHelper()
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val context: Context = this
-        if (!locationHelper.checkLocationPermission(context)){
+        if (!locationHelper.checkLocationPermission(context)) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
@@ -42,8 +56,37 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        data class BottomNavigationItem(
+            var title: String,
+            val selectedIcon: ImageVector,
+            val unselectedIcon: ImageVector,
+            val hasNews: Boolean,
+            val badgeCount: Int? = null
+        )
         setContent {
             DiveBuddyTheme {
+                val items = listOf(
+                    BottomNavigationItem(
+                        title = "Home",
+                        selectedIcon = Icons.Filled.Home,
+                        unselectedIcon = Icons.Outlined.Home,
+                        hasNews = false,
+                    ),
+                    // get extended icons dependency
+                    BottomNavigationItem(
+                        title = "Chat",
+                        selectedIcon = Icons.Filled.List,
+                        unselectedIcon = Icons.Outlined.Home,
+                        hasNews = false,
+                        badgeCount = 45 // add variable unread messages
+                    ),
+                    BottomNavigationItem(
+                        title = "Settings",
+                        selectedIcon = Icons.Filled.Settings,
+                        unselectedIcon = Icons.Outlined.Settings,
+                        hasNews = false,
+                    ),
+                )
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -58,6 +101,54 @@ class MainActivity : ComponentActivity() {
                         composable("finder") { FinderScreen(navController) }
                         composable("chat") { ChatScreen(ChatViewModel()) }
                     }
+                    var selectedItemIndex by rememberSaveable {
+                        mutableStateOf(0)
+                    }
+/*                    Scaffold(
+                        bottomBar = {
+                            NavigationBar {
+                                items.forEachIndexed { index, item ->
+                                    NavigationBarItem(
+                                        selected = selectedItemIndex == index,
+                                        onClick = {
+                                            selectedItemIndex = index
+                                            // navController.navigate(item.title)
+                                        },
+                                        label = {
+                                            Text(text = item.title)
+                                        },
+                                        alwaysShowLabel = false,
+                                        icon = {
+                                            BadgedBox(
+                                                badge = {
+                                                    if(item.badgeCount != null) {
+                                                        Badge {
+                                                            Text(text = item.badgeCount.toString())
+                                                        }
+                                                    } else if(item.hasNews) {
+                                                        Badge()
+                                                    }
+                                                }
+                                            ) {
+                                                Icon(
+                                                    imageVector = if (index == selectedItemIndex) {
+                                                        item.selectedIcon
+                                                    } else item.unselectedIcon,
+                                                    contentDescription = item.title
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    ) {
+                        when (selectedItemIndex) {
+                            0 -> ProfileScreen(navController)
+                            1 -> ChatScreen(ChatViewModel()) // Example for ChatScreen
+                            //2 -> SettingsScreen() // Example for SettingsScreen
+                        }
+                    }*/
                 }
             }
         }
