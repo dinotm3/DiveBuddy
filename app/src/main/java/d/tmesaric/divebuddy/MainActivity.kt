@@ -8,10 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.MailOutline
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +33,7 @@ import d.tmesaric.divebuddy.presentation.sign_in.SignInScreen
 import d.tmesaric.divebuddy.utils.redirect
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import d.tmesaric.divebuddy.presentation.settings.SettingsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,16 +68,16 @@ class MainActivity : ComponentActivity() {
             DiveBuddyTheme {
                 val items = listOf(
                     BottomNavigationItem(
-                        title = "Home",
-                        selectedIcon = Icons.Filled.Home,
-                        unselectedIcon = Icons.Outlined.Home,
+                        title = "Finder",
+                        selectedIcon = Icons.Filled.Search,
+                        unselectedIcon = Icons.Outlined.Search,
                         hasNews = false,
                     ),
                     // get extended icons dependency
                     BottomNavigationItem(
                         title = "Chat",
-                        selectedIcon = Icons.Filled.List,
-                        unselectedIcon = Icons.Outlined.Home,
+                        selectedIcon = Icons.Filled.MailOutline,
+                        unselectedIcon = Icons.Outlined.MailOutline,
                         hasNews = false,
                         badgeCount = 45 // add variable unread messages
                     ),
@@ -100,6 +101,7 @@ class MainActivity : ComponentActivity() {
                         composable("sign_in") { SignInScreen(navController) }
                         composable("finder") { FinderScreen(navController) }
                         composable("chat") { ChatScreen(ChatViewModel()) }
+                        composable("settings") { SettingsScreen() }
                     }
                     var selectedItemIndex by rememberSaveable {
                         mutableStateOf(0)
@@ -146,7 +148,7 @@ class MainActivity : ComponentActivity() {
                         when (selectedItemIndex) {
                             0 -> ProfileScreen(navController)
                             1 -> ChatScreen(ChatViewModel()) // Example for ChatScreen
-                            //2 -> SettingsScreen() // Example for SettingsScreen
+                            2 -> SettingsScreen() // Example for SettingsScreen
                         }
                     }*/
                 }

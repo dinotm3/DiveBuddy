@@ -125,46 +125,6 @@ fun ChatScreen(viewModel: ChatViewModel) {
             content = "You too!",
             timestamp = System.currentTimeMillis() + 7000
         ),
-        ChatMessage(
-            isSentByUser = false,
-            content = "Hello!",
-            timestamp = System.currentTimeMillis()
-        ),
-        ChatMessage(
-            isSentByUser = true,
-            content = "Hi there!",
-            timestamp = System.currentTimeMillis() + 1000
-        ),
-        ChatMessage(
-            isSentByUser = false,
-            content = "How are you?",
-            timestamp = System.currentTimeMillis() + 2000
-        ),
-        ChatMessage(
-            isSentByUser = true,
-            content = "I'm doing well, thanks!",
-            timestamp = System.currentTimeMillis() + 3000
-        ),
-        ChatMessage(
-            isSentByUser = false,
-            content = "That's great to hear!",
-            timestamp = System.currentTimeMillis() + 4000
-        ),
-        ChatMessage(
-            isSentByUser = true,
-            content = "Yes, it is!",
-            timestamp = System.currentTimeMillis() + 5000
-        ),
-        ChatMessage(
-            isSentByUser = false,
-            content = "Have a nice day!",
-            timestamp = System.currentTimeMillis() + 6000
-        ),
-        ChatMessage(
-            isSentByUser = true,
-            content = "You too!",
-            timestamp = System.currentTimeMillis() + 7000
-        ),
 
     )
 

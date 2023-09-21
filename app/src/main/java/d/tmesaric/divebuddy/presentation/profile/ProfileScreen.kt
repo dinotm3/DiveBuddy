@@ -44,5 +44,8 @@ fun ProfileScreen(navController: NavController) {
         Button(onClick = { navController.navigate("chat") }) {
             Text("chat")
         }
+        Button(onClick = { navController.navigate("settings") }) {
+            Text("settings")
+        }
     }
 }

@@ -42,7 +42,7 @@ fun FinderListItem(
                 .clickable { onItemClick(user) }
         ) {
             Image(
-                painter = painterResource(id = d.tmesaric.divebuddy.R.drawable.ic_launcher_background),
+                painter = painterResource(id = d.tmesaric.divebuddy.R.drawable.background_bubbles_background),
                 contentDescription = null,
                 modifier = Modifier
                     .size(IMAGE_MODIFIER)
