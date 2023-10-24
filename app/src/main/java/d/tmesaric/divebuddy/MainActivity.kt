@@ -9,10 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.MailOutline
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -79,7 +76,7 @@ class MainActivity : ComponentActivity() {
                         selectedIcon = Icons.Filled.MailOutline,
                         unselectedIcon = Icons.Outlined.MailOutline,
                         hasNews = false,
-                        badgeCount = 45 // add variable unread messages
+                        badgeCount = 3 // add variable unread messages
                     ),
                     BottomNavigationItem(
                         title = "Settings",
@@ -87,13 +84,19 @@ class MainActivity : ComponentActivity() {
                         unselectedIcon = Icons.Outlined.Settings,
                         hasNews = false,
                     ),
+                    BottomNavigationItem(
+                        title = "Requests",
+                        selectedIcon = Icons.Filled.Person,
+                        unselectedIcon = Icons.Outlined.Person,
+                        hasNews = false,
+                        badgeCount = 1
+                    ),
                 )
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val userLoggedIn = true
-                    val user = User()
                     val navController = rememberNavController()
                     val startDestination = redirect(userLoggedIn)
                     NavHost(navController = navController, startDestination = startDestination) {
@@ -106,7 +109,7 @@ class MainActivity : ComponentActivity() {
                     var selectedItemIndex by rememberSaveable {
                         mutableStateOf(0)
                     }
-/*                    Scaffold(
+                    Scaffold(
                         bottomBar = {
                             NavigationBar {
                                 items.forEachIndexed { index, item ->
@@ -146,11 +149,11 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                         when (selectedItemIndex) {
-                            0 -> ProfileScreen(navController)
+                            0 -> FinderScreen(navController)
                             1 -> ChatScreen(ChatViewModel()) // Example for ChatScreen
                             2 -> SettingsScreen() // Example for SettingsScreen
                         }
-                    }*/
+                    }
                 }
             }
         }

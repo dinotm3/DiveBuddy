@@ -2,7 +2,6 @@ package d.tmesaric.divebuddy.presentation.chat
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
@@ -18,20 +17,20 @@ import androidx.compose.ui.Modifier
 import d.tmesaric.divebuddy.domain.chat.WebSocketListener
 import okhttp3.OkHttpClient
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import d.tmesaric.divebuddy.R
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
-import d.tmesaric.divebuddy.ui.theme.DarkBlue
-import d.tmesaric.divebuddy.ui.theme.DeepBlue
+import d.tmesaric.divebuddy.ui.theme.White
 import okhttp3.WebSocket
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -84,6 +83,8 @@ fun ChatScreen(viewModel: ChatViewModel) {
     var text by remember { mutableStateOf("") }
     //var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
 
+
+
     val messages = listOf(
         ChatMessage(
             isSentByUser = false,
@@ -102,7 +103,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
         ),
         ChatMessage(
             isSentByUser = true,
-            content = "I'm doing well, thanks!",
+            content = "I'm doing well, thanks.",
             timestamp = System.currentTimeMillis() + 3000
         ),
         ChatMessage(
@@ -112,20 +113,9 @@ fun ChatScreen(viewModel: ChatViewModel) {
         ),
         ChatMessage(
             isSentByUser = true,
-            content = "Yes, it is!",
+            content = "Let's go diving!",
             timestamp = System.currentTimeMillis() + 5000
         ),
-        ChatMessage(
-            isSentByUser = false,
-            content = "Have a nice day!",
-            timestamp = System.currentTimeMillis() + 6000
-        ),
-        ChatMessage(
-            isSentByUser = true,
-            content = "You too!",
-            timestamp = System.currentTimeMillis() + 7000
-        ),
-
     )
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -145,6 +135,25 @@ fun ChatScreen(viewModel: ChatViewModel) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Marko", // Replace with the name of the first user
+                    color = White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "Dino", // Replace with the name of the second user
+                    color = White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            }
             // Chat Messages
             LazyColumn(
                 modifier = Modifier
@@ -154,7 +163,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
             ) {
                 items(messages.size) { index ->
                     ChatMessageItem(
-                        isSentByUser = messages[index].isSentByUser,
+                        isSentByUser = !messages[index].isSentByUser,
                         content = messages[index].content,
                         //timestamp = messages[index].timestamp.toString(),
                     )
@@ -165,8 +174,8 @@ fun ChatScreen(viewModel: ChatViewModel) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .border(1.dp, DarkBlue)
+                    .padding(8.dp).padding(bottom = 80.dp)
+
             ) {
                 BasicTextField(
                     value = text,
@@ -191,6 +200,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                         .weight(1f)
                         .background(MaterialTheme.colorScheme.background)
                         .padding(8.dp)
+                        .align(CenterVertically)
                 )
 
                 Button(

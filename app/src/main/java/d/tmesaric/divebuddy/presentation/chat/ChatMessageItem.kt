@@ -39,8 +39,8 @@ fun ChatMessageItem(isSentByUser: Boolean, content: String) {
             color = textColor,
             fontSize = 16.sp,
             modifier = Modifier
-                .align(alignment) // Align text vertically by baseline
-                .padding(horizontal = 16.dp) // Add horizontal padding
+                .align(alignment)
+                .padding(horizontal = 16.dp)
         )
     }
 }

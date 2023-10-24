@@ -1,7 +1,6 @@
 package d.tmesaric.divebuddy.presentation.finder
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,6 +11,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import d.tmesaric.divebuddy.domain.model.User
 import d.tmesaric.divebuddy.ui.theme.DarkBlue
+import d.tmesaric.divebuddy.ui.theme.White
 
 
 private val IMAGE_MODIFIER = 90.dp
@@ -28,7 +29,12 @@ private val IMAGE_MODIFIER = 90.dp
 @Composable
 fun FinderListItem(
     user: User,
-    onItemClick: (User) -> Unit
+    onItemClick: (User) -> Unit,
+    profilePic: Painter,
+    depth: Int,
+    dynamic: Int,
+    staticMinutes: Int,
+    staticSeconds: Int,
 ) {
     Card(
         modifier = Modifier
@@ -42,7 +48,7 @@ fun FinderListItem(
                 .clickable { onItemClick(user) }
         ) {
             Image(
-                painter = painterResource(id = d.tmesaric.divebuddy.R.drawable.background_bubbles_background),
+                painter = profilePic,
                 contentDescription = null,
                 modifier = Modifier
                     .size(IMAGE_MODIFIER)
@@ -61,16 +67,21 @@ fun FinderListItem(
                     text = user.name,
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
                 )
                 Text(
                     text = user.country,
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
+
                 )
                 Text(
-                    text = "Level: Master",
+                    text = "Level: Freediver",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
+
                 )
             }
             Column(
@@ -81,19 +92,24 @@ fun FinderListItem(
             )
             {
                 Text(
-                    text = "MaxDepth: 20m",
+                    text = "Depth: $depth m",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
+
                 )
                 Text(
-                    text = "MaxDynamic: 100m",
+                    text = "Dynamic: $dynamic m",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
+
                 )
                 Text(
-                    text = "MaxStatic: 5 min",
+                    text = "Static: $staticMinutes min $staticSeconds",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
+                    color = White
                 )
             }
         }
@@ -103,6 +119,6 @@ fun FinderListItem(
 @Preview
 @Composable
 fun FinderListItemPreview() {
-    val user = User(1, "John Doe")
-    FinderListItem(user = user, onItemClick = {})
+    //val user = User(1, "John Doe")
+    //FinderListItem(user = user, onItemClick = {})
 }

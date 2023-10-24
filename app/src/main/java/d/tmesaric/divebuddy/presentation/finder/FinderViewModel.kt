@@ -30,7 +30,12 @@ class FinderViewModel @Inject constructor(
     val filteredUsers: State<List<User>?> = _filteredUsers
 
     // TODO: replace with getLoggedInUser
-    val user = User()
+    val user = User(
+        depth = 35,
+        dynamic = 100,
+        staticMinutes = 5,
+        staticSeconds = 0
+    )
 
     init {
         getUsers()

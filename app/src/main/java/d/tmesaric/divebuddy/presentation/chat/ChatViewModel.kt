@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import d.tmesaric.divebuddy.domain.chat.ChatMessage
+import d.tmesaric.divebuddy.domain.chat.ChatRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 class ChatViewModel() : ViewModel()  {
 
-    //private val chatRepository = ChatRepository()
+    private val chatRepository = ChatRepository()
 
     private val _socketStatus = MutableStateFlow(false)
     val socketStatus: StateFlow<Boolean> = _socketStatus
@@ -21,11 +22,11 @@ class ChatViewModel() : ViewModel()  {
     val messages: StateFlow<List<String>> = _messages
 
     private val _chatMessages = MutableStateFlow<List<ChatMessage>>(emptyList())
-    val chatMessages: StateFlow<List<ChatMessage>> = _chatMessages
+    private val chatMessages: StateFlow<List<ChatMessage>> = _chatMessages
 
     fun sendChatMessage(senderId: String, content: String) {
         viewModelScope.launch {
-            //chatRepository.sendChatMessage(senderId, content)
+            chatRepository.sendChatMessage(senderId, content)
         }
     }
 
@@ -33,7 +34,7 @@ class ChatViewModel() : ViewModel()  {
         _chatMessages.value = chatMessages.value + message
     }
 
-/*    fun addMessage(message: String) {
+    fun addMessage(message: String) {
         viewModelScope.launch(Dispatchers.Main) {
             if(_socketStatus.value) {
                 _messages.value = _messages.value + message
@@ -41,7 +42,7 @@ class ChatViewModel() : ViewModel()  {
         }
         Log.d("Test", "addMessage: $message")
 
-    }*/
+    }
 
 
     fun setStatus(status: Boolean) = viewModelScope.launch(Dispatchers.Main) {

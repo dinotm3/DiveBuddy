@@ -11,6 +11,10 @@ data class User(
     val lng: Double = 0.0,
     var lastKnownPosition: Location? = Location("Test"),
     val chats: MutableList<Chat>? = null,
+    val depth: Int,
+    val dynamic: Int,
+    val staticMinutes: Int,
+    val staticSeconds: Int
 )
 
 fun getLastKnownLocation(lat: Double, lng: Double): Location {

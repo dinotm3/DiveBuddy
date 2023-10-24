@@ -54,8 +54,8 @@ class LocationClientImpl @Inject constructor(
     private fun checkAllPermissions(context: Context): Boolean {
         try {
             if (!LocationHelper().checkLocationPermission(context)) {
-                if(!LocationHelper().askForLocationPermissions())
-                    return false
+                /*if(!LocationHelper().askForLocationPermissions())
+                    return false*/
             }
             val locationManager =
                 context.getSystemService(Context.LOCATION_SERVICE) as LocationManager

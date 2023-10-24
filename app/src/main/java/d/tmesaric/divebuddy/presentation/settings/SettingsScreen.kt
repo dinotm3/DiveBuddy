@@ -149,7 +149,7 @@ fun SettingsScreen() {
                         .padding(8.dp)
                         .border(1.dp, DarkBlue)
                 ) {
-                    Text(text = "Allow location", modifier = Modifier.weight(1f).align(CenterVertically).padding(6.dp), color = Color.White)
+                    Text(text = "Show me in search", modifier = Modifier.weight(1f).align(CenterVertically).padding(6.dp), color = Color.White)
                     // Add a Switch here instead of Button
                     Switch(
                         checked = true, // Set the initial state of the switch
